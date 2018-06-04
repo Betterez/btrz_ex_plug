@@ -7,3 +7,7 @@ erl_crash.dump
 *.ez
 *.beam
 /config/*.secret.exs
+
+# Elixir extensions
+.elixir_ls
+
