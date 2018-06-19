@@ -35,6 +35,8 @@ defmodule BtrzExPlug.MixProject do
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:plug, "~> 1.4"},
       {:excoveralls, "~> 0.8", only: :test},
+      {:phoenix_swagger, "~> 0.8.0"},
+      {:ex_json_schema, "~> 0.5"},
       {:recase, "~> 0.3.0"}
     ]
   end
