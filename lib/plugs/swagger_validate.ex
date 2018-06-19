@@ -2,7 +2,7 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
   @moduledoc """
   A plug to automatically validate all requests in a given scope. Please make
   sure to:
-  * load Swagger specs at appliction start with
+  * load Swagger specs at application start with
     `PhoenixSwagger.Validator.parse_swagger_schema/1`
   * set `conn.private.phoenix_swagger.valid` to `true` to skip validation
   """
@@ -40,11 +40,9 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
 
   defp send_error_response(conn, status, message, path) do
     response = %{
-      error: %{
-        status: 400,
-        code: "WRONG_DATA",
-        message: message
-      }
+      status: 400,
+      code: "WRONG_DATA",
+      message: message
     }
 
     conn
