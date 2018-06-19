@@ -18,27 +18,32 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
     opts
   end
 
-  def call(%Plug.Conn{private: %{phoenix_swagger: %{valid: true}}} = conn, _opts), do: conn
-
   def call(conn, opts) do
-    validation_failed_status = Keyword.get(opts, :validation_failed_status, 400)
-
-    case ConnValidator.validate(conn) do
-      {:ok, conn} ->
-        conn |> put_private(:phoenix_swagger, %{valid: true})
-
-      {:error, :no_matching_path} ->
-        send_error_response(conn, 404, "API does not provide resource", conn.request_path)
-
-      {:error, [{message, path} | _], _path} ->
-        send_error_response(conn, validation_failed_status, message, path)
-
-      {:error, message, path} ->
-        send_error_response(conn, validation_failed_status, message, path)
-    end
+    conn
+    |> ConnValidator.validate()
+    |> send_response(conn, opts)
   end
 
-  defp send_error_response(conn, status, message, path) do
+  def send_response({:ok, _}, conn, _opts) do
+    conn
+    |> put_private(:phoenix_swagger, %{valid: true})
+  end
+
+  def send_response({:error, :no_matching_path}, conn, _opts) do
+    send_error_response(conn, 404, "API does not provide resource")
+  end
+
+  def send_response({:error, [{message, _path} | _]}, conn, opts) do
+    validation_failed_status = Keyword.get(opts, :validation_failed_status, 400)
+    send_error_response(conn, validation_failed_status, message)
+  end
+
+  def send_response({:error, message, _path}, conn, opts) do
+    validation_failed_status = Keyword.get(opts, :validation_failed_status, 400)
+    send_error_response(conn, validation_failed_status, message)
+  end
+
+  defp send_error_response(conn, status, message) do
     response = %{
       status: 400,
       code: "WRONG_DATA",
