@@ -33,7 +33,7 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
     send_error_response(conn, 404, "API does not provide resource")
   end
 
-  def send_response({:error, [{message, _ | _], _}, conn, opts) do
+  def send_response({:error, [{message, _} | _], _}, conn, opts) do
     validation_failed_status = Keyword.get(opts, :validation_failed_status, 400)
     send_error_response(conn, validation_failed_status, message)
   end
