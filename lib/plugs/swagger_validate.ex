@@ -14,9 +14,9 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
   Options:
    - `:validation_failed_status` the response status to set when parameter validation fails, defaults to 400.
   """
-  def init(opts) do
-    opts
-  end
+  def init(opts), do: opts
+
+  def call(%Plug.Conn{private: %{phoenix_swagger: %{valid: true}}} = conn, _opts), do: conn
 
   def call(conn, opts) do
     conn
@@ -33,7 +33,7 @@ defmodule BtrzExPlug.Plugs.SwaggerValidate do
     send_error_response(conn, 404, "API does not provide resource")
   end
 
-  def send_response({:error, [{message, _path} | _]}, conn, opts) do
+  def send_response({:error, [{message, _ | _], _}, conn, opts) do
     validation_failed_status = Keyword.get(opts, :validation_failed_status, 400)
     send_error_response(conn, validation_failed_status, message)
   end
