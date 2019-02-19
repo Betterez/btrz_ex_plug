@@ -37,7 +37,7 @@ defmodule BtrzExPlug.MixProject do
       {:excoveralls, "~> 0.8", only: :test},
       {:phoenix_swagger, "~> 0.8.0"},
       {:ex_json_schema, "~> 0.5"},
-      {:recase, "~> 0.3.0"},
+      {:recase, "~> 0.4.0"},
       {:logster, "~> 0.8.0"},
       {:httpoison, "~> 1.0"}
     ]
