@@ -4,5 +4,10 @@ defmodule BtrzExPlug do
 
   Plugs:
     * `BtrzExPlug.Plugs.ParseParamKeys`: Parse params based on a function
+    * `BtrzExPlug.Plugs.HttpLogger`: HTTP req/res activity logger
+    * `BtrzExPlug.Plugs.SwaggerValidate`: Validate requests against swagger
+
+  Logging helpers:
+    * `BtrzExPlug.ApplicationLogFormatter`: Application file log formatter
   """
 end

@@ -2,7 +2,7 @@ defmodule BtrzExPlug.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/Betterez/btrz_ex_plug"
-  @version "0.1.0"
+  @version "0.2.0"
 
   def project do
     [
@@ -38,7 +38,6 @@ defmodule BtrzExPlug.MixProject do
       {:phoenix_swagger, "~> 0.8.0"},
       {:ex_json_schema, "~> 0.5"},
       {:recase, "~> 0.4.0"},
-      {:logster, "~> 0.8.0"},
       {:httpoison, "~> 1.0"}
     ]
   end

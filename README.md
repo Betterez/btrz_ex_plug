@@ -14,6 +14,6 @@ by adding `btrz_ex_plug` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:btrz_ex_plug, "~> 0.1.0"}]
+  [{:btrz_ex_plug, "~> 0.2.0"}]
 end
 ```
