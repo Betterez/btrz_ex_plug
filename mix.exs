@@ -38,7 +38,9 @@ defmodule BtrzExPlug.MixProject do
       {:phoenix_swagger, "~> 0.8.0"},
       {:ex_json_schema, "~> 0.5"},
       {:recase, "~> 0.4.0"},
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+      {:opentelemetry_api, "~> 1.5"},
+      {:opentelemetry, "~> 1.5", only: :test}
     ]
   end
 
@@ -52,9 +54,7 @@ defmodule BtrzExPlug.MixProject do
   end
 
   defp aliases do
-    [
-      test: ["coveralls"]
-    ]
+    []
   end
 
   defp package do

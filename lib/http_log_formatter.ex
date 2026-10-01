@@ -7,7 +7,7 @@ defmodule BtrzExPlug.HttpLogFormatter do
     :xapikey,
     :date,
     :amzn_trace_id,
-    :grafana_trace_id,
+    :otel_trace_id,
     :url,
     :referrer,
     :useragent
@@ -17,6 +17,10 @@ defmodule BtrzExPlug.HttpLogFormatter do
     fields
     |> Enum.map(&format_field/1)
     |> Enum.intersperse(?\s)
+  end
+
+  defp format_field({:otel_trace_id, value}) do
+    ["grafana_trace_id=", format_value(:otel_trace_id, value)]
   end
 
   defp format_field({key, value}) do

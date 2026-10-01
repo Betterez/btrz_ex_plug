@@ -3,6 +3,8 @@ defmodule BtrzExPlug.Plugs.HttpLoggerTest do
 
   import ExUnit.CaptureLog
 
+  require OpenTelemetry.Tracer
+
   alias BtrzExPlug.Plugs.HttpLogger
   alias Plug.Conn
 
@@ -49,6 +51,52 @@ defmodule BtrzExPlug.Plugs.HttpLoggerTest do
     assert log =~ "responselength=2"
     assert log =~ "responsetime="
     refute log =~ ~s(method="GET")
+  end
+
+  test "log uses the current span trace id" do
+    opts = HttpLogger.init(service: "my_service")
+
+    OpenTelemetry.Tracer.with_span "test-request" do
+      span_ctx = OpenTelemetry.Tracer.current_span_ctx()
+      trace_id = OpenTelemetry.Span.hex_trace_id(span_ctx) |> to_string()
+
+      log =
+        capture_log(fn ->
+          conn =
+            :get
+            |> Plug.Test.conn("/loyalty")
+            |> HttpLogger.call(opts)
+            |> Conn.send_resp(200, "ok")
+
+          send(self(), {:conn, conn})
+        end)
+
+      assert_receive {:conn, conn}
+      assert conn.assigns.otel_trace_id == trace_id
+      assert Conn.get_resp_header(conn, "x-grafana-trace-id") == []
+      assert log =~ ~s(grafana_trace_id="#{trace_id}")
+    end
+  end
+
+  test "without a span logs dash and does not set trace response header" do
+    opts = HttpLogger.init(service: "my_service")
+
+    log =
+      capture_log(fn ->
+        conn =
+          :get
+          |> Plug.Test.conn("/")
+          |> HttpLogger.call(opts)
+          |> Conn.send_resp(200, "ok")
+
+        send(self(), {:conn, conn})
+      end)
+
+    assert_receive {:conn, conn}
+    assert conn.assigns.otel_trace_id == "-"
+    assert Conn.get_resp_header(conn, "x-grafana-trace-id") == []
+    assert log =~ ~s(grafana_trace_id="-")
+    refute log =~ ~s(grafana_trace_id="00000000000000000000000000000000")
   end
 
   test "server_id option overrides application env" do

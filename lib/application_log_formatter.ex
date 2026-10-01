@@ -12,8 +12,8 @@ defmodule BtrzExPlug.ApplicationLogFormatter do
       "#{server_id_base()}##{:os.getpid()}"
       |> String.pad_trailing(15)
 
-    amzn_trace_id = metadata_value(metadata, :amzn_trace_id)
-    grafana_trace_id = metadata_value(metadata, :grafana_trace_id)
+    amzn_trace_id = sanitize_amzn(metadata_value(metadata, :amzn_trace_id))
+    otel_trace_id = metadata_value(metadata, :otel_trace_id)
 
     [
       level_str,
@@ -24,7 +24,7 @@ defmodule BtrzExPlug.ApplicationLogFormatter do
       ?\s,
       amzn_trace_id,
       ?\s,
-      grafana_trace_id,
+      otel_trace_id,
       ?\s,
       message,
       ?\n
@@ -47,5 +47,11 @@ defmodule BtrzExPlug.ApplicationLogFormatter do
       value when is_binary(value) and value != "" -> value
       _ -> "-"
     end
+  end
+
+  defp sanitize_amzn("-"), do: "-"
+
+  defp sanitize_amzn(value) do
+    String.replace(value, "=", "-", global: false)
   end
 end

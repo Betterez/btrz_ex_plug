@@ -44,4 +44,14 @@ defmodule BtrzExPlug.HttpLogFormatterTest do
 
     assert line == "status=- method=-"
   end
+
+  test "otel_trace_id is emitted as grafana_trace_id for log parsers" do
+    line =
+      [otel_trace_id: "4bf92f3577b34da6a3ce929d0e0e4736", method: "GET"]
+      |> HttpLogFormatter.format()
+      |> IO.iodata_to_binary()
+
+    assert line == ~s(grafana_trace_id="4bf92f3577b34da6a3ce929d0e0e4736" method=GET)
+    refute line =~ ~r/(^|\s)otel_trace_id=/
+  end
 end

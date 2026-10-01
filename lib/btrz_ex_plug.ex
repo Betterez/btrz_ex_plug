@@ -4,7 +4,7 @@ defmodule BtrzExPlug do
 
   Plugs:
     * `BtrzExPlug.Plugs.ParseParamKeys`: Parse params based on a function
-    * `BtrzExPlug.Plugs.HttpLogger`: HTTP req/res activity logger
+    * `BtrzExPlug.Plugs.HttpLogger`: HTTP req/res activity logger (requires OpenTelemetry)
     * `BtrzExPlug.Plugs.SwaggerValidate`: Validate requests against swagger
 
   Logging helpers:

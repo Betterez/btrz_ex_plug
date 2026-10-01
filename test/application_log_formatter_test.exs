@@ -24,15 +24,15 @@ defmodule BtrzExPlug.ApplicationLogFormatterTest do
         :info,
         "hello",
         {{2026, 1, 1}, {12, 0, 0, 123}},
-        amzn_trace_id: "Root-1",
-        grafana_trace_id: "g-1"
+        amzn_trace_id: "Root=1",
+        otel_trace_id: "4bf92f3577b34da6a3ce929d0e0e4736"
       )
       |> IO.iodata_to_binary()
 
     assert String.starts_with?(line, "INFO  2026-01-01T12:00:00.123Z ")
     assert line =~ "test-host##{:os.getpid()}"
     assert line =~ " Root-1 "
-    assert line =~ " g-1 "
+    assert line =~ " 4bf92f3577b34da6a3ce929d0e0e4736 "
     assert String.ends_with?(line, "hello\n")
   end
 
